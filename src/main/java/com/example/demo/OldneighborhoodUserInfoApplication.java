@@ -8,5 +8,7 @@ public class OldneighborhoodUserInfoApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(OldneighborhoodUserInfoApplication.class, args);
+		
+		
 	}
 }
