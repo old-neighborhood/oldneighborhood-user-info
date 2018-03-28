@@ -13,11 +13,14 @@
   <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet" />
-  <link href="css/toastr.css" rel="stylesheet"/>
+  <link href="css/toastr.css" rel="stylesheet" />
+ 
 </head>
 <body>
+
+ <script type="text/javascript"  th:src="@{/vendor/jquery/jquery.min.js}"></script>
 <h1>用户页面 </h1>
-	<form th:action="@{/userinfo/{u_ID}(u_ID=${u_ID})}" method="post">
+	<form method="post">
 		<fieldset>
 			<legend>用户信息</legend>
 			
@@ -39,55 +42,89 @@
 			<input type="text" name="u_score" id="u_score"  th:attr="value=${user.u_score}" readonly="readonly" /><br /><br />
 			<label for="u_date">创建日期:</label> 
 			<input type="text" name="u_date" id="u_date"  th:attr="value=${user.u_date}" readonly="readonly" /><br /><br />
-			<input type="button"  onclick="changetext(this)" value="编辑" />
-			<input type="submit"  value="确认修改" />
+			<input type="button"  id="edit" value="编辑" />
+			<input type="submit"  onclick="postJson();" value="确认修改" />
 		</fieldset>		
 	</form>
-	
-	<!-- Bootstrap core JavaScript-->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="js/toastr.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <!-- Core plugin JavaScript-->
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-  <script src="js/jquery.validate.min.js"></script>
-<script src="js/register.js"></script>
-<script language="Javascript"> 
-function changetext(id)
-{
+	<script> 
+    $("#edit").click(function(){
 	document.getElementById("u_name").readOnly=false;
 	document.getElementById("u_password").readOnly=false;
 	document.getElementById("u_image").readOnly=false;
 	document.getElementById("u_signature").readOnly=false;
 	document.getElementById("u_tele").readOnly=false;
 	document.getElementById("u_email").readOnly=false;
-}
-</script> 
-<script language="Javascript">
-$('submit').click(function(){
-	var u_ID =  document.getElementById("u_ID").value;
-	var u_name =  document.getElementById("u_name").value;
-	var u_password =  document.getElementById("u_password").value;
-	var u_image =  document.getElementById("u_image").value;
-	var u_signature =  document.getElementById("u_signature").value;
-	var u_tele =  document.getElementById("u_tele").value;
-	var u_email =  document.getElementById("u_email").value;
-	var map = "u_ID="+u_ID+"&u_name=" + u_name+"&u_password="+u_password+"&u_image="+u_image+"&u_signature=" + u_signature + "&u_tele=" + u_tele+ "&u_email="+u_email;
+});
+
+function postJson(){
+	var u_ID = $("#u_ID").val();
+	var u_name = $("#u_name").val();
+	var u_password = $("#u_password").val();
+	var u_signature = $("#u_signature").val();
+	var u_tele = $("#u_tele").val();
+	var u_emai = $("#u_email").val();
+	var u_image = $("#u_image").val();
             $.ajax({
                 cache:true,//保留缓存数据
                 type:"POST",//为post请求
-                url:"http://localhost:8082/user/userinfo/{u_ID}(u_ID=${u_ID})",//这是我在后台接受数据的文件名
-                data:{"map" : map},//将该表单序列化
-                async:false,//设置成true，这标志着在请求开始后，其他代码依然能够执行。如果把这个选项设置成false，这意味着所有的请求都不再是异步的了，这也会导致浏览器被锁死
-                error:function(request){//请求失败之后的操作
-                    return;
-                },
+                contentType:'application/x-www-form-urlencoded',
+                url:"",//这是我在后台接受数据的文件名
+                data:JSON.stringify({
+        			"u_ID":u_ID,
+        			"u_name":u_name,
+        			"u_password":u_password,
+        			"u_signature":u_signature,
+        			"u_tele":u_tele,
+        			"u_emai":u_email,
+        			"u_image":u_image
+        		}),
+        		dataType:"json",
+                async:true,//设置成true，这标志着在请求开始后，其他代码依然能够执行。如果把这个选项设置成false，这意味着所有的请求都不再是异步的了，这也会导致浏览器被锁死
                 success:function(data){//请求成功之后的操作
-                    console.log("success");
+                	console.log(data);
+		            var status = data.result;
+		            if (status == "error") {
+						
+					}else if (status == "success") {
+						
                 }
-            });
+            }
         })
+}
+</script> 
+<!-- 
+	Bootstrap core JavaScript
+  <script src="/static/vendor/jquery/jquery.min.js"></script>
+  <script src="/static/js/toastr.min.js"></script>
+  <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+   Core plugin JavaScript
+  <script src="/static/vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="/static/js/jquery.validate.min.js"></script>
+
+<script src="js/userinfo.js"></script>
+
+
+function postJson() { 
+	$.ajaxSetup({    
+	       contentType : 'application/json'    
+	   });
+	
+	$.ajax({   
+		  cache:true,//保留缓存数据
+          type:"POST",//为post请求
+          url:"http://localhost:8082/user/userinfo/{u_ID}(u_ID=${u_ID})",//这是我在后台接受数据的文件名   
+        data : document.getElementById('requesttext').value,   
+        success : onSuccessResult,   
+        error : onErrorResult  
+    });  
+      
+    return false;   
+  }
+}
+<script language="Javascript">
+
         </script>
+        -->
 </body>
 
 

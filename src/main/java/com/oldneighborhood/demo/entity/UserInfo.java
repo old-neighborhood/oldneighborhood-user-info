@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -17,9 +18,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 @Entity
 @Table(name="user")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
@@ -41,11 +44,8 @@ public class UserInfo implements Serializable{
 	@NonNull
 	private String u_email;
 	@NonNull
-	@DateTimeFormat(pattern="yyyy-MM-dd")
-	private Date u_birthday;
-	@NonNull
 	private String u_signature;
-	
+	@Column(columnDefinition="timestamp not null default now()" , updatable=false)
 	private Timestamp u_date;
 
 }
